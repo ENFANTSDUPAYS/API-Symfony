@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoGameRepository::class)]
@@ -18,11 +19,12 @@ class VideoGame
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(["videoGame:write"])]
     #[ORM\Column]
     private ?int $id = null;
     
     #[ORM\Column(length: 255)]
-    #[Groups(["video_game_read"])]
+    #[Groups(["videogame:read", "videoGame:write"])]
     #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
     #[Assert\Length(
         min: 2,
@@ -33,13 +35,13 @@ class VideoGame
     private ?string $title = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(["video_game_read"])]
+    #[Groups(["videogame:read", "videoGame:write"])]
     #[Assert\NotNull(message: "La date de sortie est obligatoire.")]
     #[Assert\Type(DateTime::class)]
     private ?DateTime $Release_date = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(["video_game_read"])]
+    #[Groups(["videogame:read", "videoGame:write"])]
     #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
     private ?string $description = null;
 
@@ -53,7 +55,6 @@ class VideoGame
      * @var Collection<int, Category>
      */
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'videoGames')]
-    #[Groups(["video_game_read"])]
     #[Assert\Count(
         min: 1,
         minMessage: "Le jeu doit appartenir à au moins une catégorie."

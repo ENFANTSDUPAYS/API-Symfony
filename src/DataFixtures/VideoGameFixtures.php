@@ -117,6 +117,7 @@ class VideoGameFixtures extends Fixture implements DependentFixtureInterface
         return [
             EditorFixtures::class,
             CategoryFixtures::class,
+            UserFixtures::class,
         ];
     }
 }

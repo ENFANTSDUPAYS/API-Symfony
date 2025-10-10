@@ -18,12 +18,13 @@ class Editor
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["videoGame:write"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["video_game_read"])]
+    #[Groups(["videogame:read", "videoGame:write"])]
     #[Assert\NotBlank(message: "Le nom de la catégorie ne peut pas être vide.")]
-    #[Assert\length(
+    #[Assert\Length(
         min: 2,
         max: 255,
         minMessage: "Le nom doit faire au moins {{ limit }} caractères.",
@@ -32,6 +33,7 @@ class Editor
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["videogame:read","videoGame:write"])]
     #[Assert\NotBlank(message: "Le pays ne peut pas être vide.")]
     #[Assert\Length(
         max: 255,
@@ -49,7 +51,7 @@ class Editor
      * @var Collection<int, VideoGame>
      */
     #[ORM\OneToMany(targetEntity: VideoGame::class, mappedBy: 'editor_id')]
-    #[MaxDepth(1)]
+    #[Groups(["videogame:read","videoGame:write"])]
     private Collection $videoGames;
 
     public function __construct()

@@ -16,11 +16,12 @@ class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(["videoGame:write"])]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["video_game_read"])]
+    #[Groups(["videogame:read","videoGame:write"])]
     #[Assert\NotBlank(message: "Le nom de la catégorie ne peut pas être vide.")]
     #[Assert\length(
         min: 2,
@@ -40,6 +41,7 @@ class Category
      * @var Collection<int, VideoGame>
      */
     #[ORM\ManyToMany(targetEntity: VideoGame::class, mappedBy: 'category_id')]
+    #[Groups(["videogame:read","videoGame:write"])]
     private Collection $videoGames;
 
     public function __construct()

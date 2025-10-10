@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\VideoGame;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\Traits\PaginationTrait;
 
 /**
  * @extends ServiceEntityRepository<VideoGame>
@@ -15,6 +16,8 @@ class VideoGameRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, VideoGame::class);
     }
+
+    use PaginationTrait;
 
 //    /**
 //     * @return VideoGame[] Returns an array of VideoGame objects
