@@ -30,11 +30,14 @@ final class ApiVideoGameController extends AbstractController
         );
     }
 
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('PUBLIC_ACCESS')]
     #[Route('/api/v1/add-game', name: 'app_api_add_game', methods: ['POST'])]
     public function apiV1AddGame(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse
     {
-        $videoGames = $serializer->deserialize($request->getContent(), VideoGame::class,'json');
+        $videoGames = $serializer->deserialize($request->getContent(), VideoGame::class,'json', ['datetime_format' => 'Y-m-d']);
+        $videoGames->setCreatedAt(new \DateTimeImmutable());
+        $videoGames->setUpdatedAt(new \DateTimeImmutable());
+        
         $em->persist($videoGames);
         $em->flush();
 

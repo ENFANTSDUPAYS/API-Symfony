@@ -30,12 +30,15 @@ final class ApiEditorController extends AbstractController
     #[Route('/api/v1/add-editor', name: 'app_api_add_editor', methods: ['POST'])]
     public function apiV1AddEditor(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse
     {
-        $category = $serializer->deserialize($request->getContent(), Editor::class,'json');
-        $em->persist($category);
+        $editor = $serializer->deserialize($request->getContent(), Editor::class,'json');
+        $editor->setCreatedAt(new \DateTimeImmutable());
+        $editor->setUpdatedAt(new \DateTimeImmutable());
+
+        $em->persist($editor);
         $em->flush();
 
         return $this->json([
-            $category, Response::HTTP_CREATED, [], ['groups' => 'category:write']
+            $editor, Response::HTTP_CREATED, [], ['groups' => 'category:write']
         ]);
     }
 }

@@ -33,6 +33,9 @@ final class ApiCategoryController extends AbstractController
     public function apiV1AddCategory(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse
     {
         $category = $serializer->deserialize($request->getContent(), Category::class,'json');
+        $category->setCreatedAt(new \DateTimeImmutable());
+        $category->setUpdatedAt(new \DateTimeImmutable());
+        
         $em->persist($category);
         $em->flush();
 
