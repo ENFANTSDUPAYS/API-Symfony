@@ -22,7 +22,7 @@ class Editor
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["videogame:read", "videoGame:write"])]
+    #[Groups(["videogame:read", "videoGame:write", "editor:read"])]
     #[Assert\NotBlank(message: "Le nom de la catégorie ne peut pas être vide.")]
     #[Assert\Length(
         min: 2,
@@ -33,7 +33,7 @@ class Editor
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["videogame:read","videoGame:write"])]
+    #[Groups(["videogame:read","videoGame:write","editor:read"])]
     #[Assert\NotBlank(message: "Le pays ne peut pas être vide.")]
     #[Assert\Length(
         max: 255,
@@ -51,7 +51,6 @@ class Editor
      * @var Collection<int, VideoGame>
      */
     #[ORM\OneToMany(targetEntity: VideoGame::class, mappedBy: 'editor_id')]
-    #[Groups(["videogame:read","videoGame:write"])]
     private Collection $videoGames;
 
     public function __construct()

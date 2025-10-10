@@ -21,9 +21,9 @@ class Category
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["videogame:read","videoGame:write"])]
+    #[Groups(["videogame:read","videoGame:write", "category:read"])]
     #[Assert\NotBlank(message: "Le nom de la catégorie ne peut pas être vide.")]
-    #[Assert\length(
+    #[Assert\Length(
         min: 2,
         max: 255,
         minMessage: "Le nom doit faire au moins {{ limit }} caractères.",
@@ -41,7 +41,6 @@ class Category
      * @var Collection<int, VideoGame>
      */
     #[ORM\ManyToMany(targetEntity: VideoGame::class, mappedBy: 'category_id')]
-    #[Groups(["videogame:read","videoGame:write"])]
     private Collection $videoGames;
 
     public function __construct()

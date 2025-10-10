@@ -55,6 +55,7 @@ class VideoGame
      * @var Collection<int, Category>
      */
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'videoGames')]
+    #[Groups(["videogame:read", "videoGame:write"])]
     #[Assert\Count(
         min: 1,
         minMessage: "Le jeu doit appartenir à au moins une catégorie."
@@ -63,6 +64,7 @@ class VideoGame
 
     #[ORM\ManyToOne(inversedBy: 'videoGames')]
     #[Assert\NotNull(message: "L'éditeur est obligatoire.")]
+    #[Groups(["videogame:read", "videoGame:write"])]
     private ?Editor $editor_id = null;
 
     public function __construct()

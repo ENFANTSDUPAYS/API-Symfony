@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\Traits\PaginationTrait;
 
 /**
  * @extends ServiceEntityRepository<Category>
@@ -15,6 +16,8 @@ class CategoryRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Category::class);
     }
+
+    use PaginationTrait;
 
     //    /**
     //     * @return Category[] Returns an array of Category objects
