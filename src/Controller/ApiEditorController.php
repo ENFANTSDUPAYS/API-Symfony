@@ -2,11 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Editor;
 use App\Repository\EditorRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class ApiEditorController extends AbstractController
 {
@@ -18,5 +24,18 @@ final class ApiEditorController extends AbstractController
         $editors = $editorRepository->findAllWithPagination($page, $limit);
 
         return $this->json($editors,200, [], ['groups'=> 'editor:read']);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/add-editor', name: 'app_api_add_editor', methods: ['POST'])]
+    public function apiV1AddEditor(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse
+    {
+        $category = $serializer->deserialize($request->getContent(), Editor::class,'json');
+        $em->persist($category);
+        $em->flush();
+
+        return $this->json([
+            $category, Response::HTTP_CREATED, [], ['groups' => 'category:write']
+        ]);
     }
 }

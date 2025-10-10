@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\VideoGame;
 use App\Repository\VideoGameRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class ApiVideoGameController extends AbstractController
 {
@@ -27,12 +32,14 @@ final class ApiVideoGameController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/add-game', name: 'app_api_add_game', methods: ['POST'])]
-    public function apiV1AddGame(VideoGameRepository $videoGameRepository): JsonResponse
+    public function apiV1AddGame(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse
     {
-        $videoGames = $videoGameRepository->findAll();
+        $videoGames = $serializer->deserialize($request->getContent(), VideoGame::class,'json');
+        $em->persist($videoGames);
+        $em->flush();
 
         return $this->json([
-            $videoGames, 200, [], ['groups' => 'video_game_read']
+            $videoGames, Response::HTTP_CREATED, [], ['groups' => 'videogame:write']
         ]);
     }
 
