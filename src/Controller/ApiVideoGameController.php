@@ -7,8 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Flex\Response;
 
 final class ApiVideoGameController extends AbstractController
 {
@@ -19,7 +17,7 @@ final class ApiVideoGameController extends AbstractController
         $videoGames = $videoGameRepository->findAll();
 
         return $this->json(
-            $videoGames, 200, [], ['groups' => 'videoGame:read']
+            $videoGames, 200, [], ['groups' => 'video_game_read']
         );
     }
 
@@ -46,7 +44,7 @@ final class ApiVideoGameController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/api/v1/edit-game/{id}', name: 'app_api_edit_game', methods: ['DELETE'])]
+    #[Route('/api/v1/delete-game/{id}', name: 'app_api_delete_game', methods: ['DELETE'])]
     public function apiV1DeleteGame(VideoGameRepository $videoGameRepository, int $id): JsonResponse
     {
         $videoGames = $videoGameRepository->findAll();
