@@ -38,7 +38,7 @@ class VideoGame
     #[Groups(["videogame:read", "videoGame:write"])]
     #[Assert\NotNull(message: "La date de sortie est obligatoire.")]
     #[Assert\Type(DateTime::class)]
-    private ?DateTime $Release_date = null;
+    private ?DateTime $release_date = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(["videogame:read", "videoGame:write"])]
@@ -54,7 +54,7 @@ class VideoGame
     /**
      * @var Collection<int, Category>
      */
-    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'videoGames')]
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'videoGames', cascade: ['persist', 'remove'])]
     #[Groups(["videogame:read", "videoGame:write"])]
     #[Assert\Count(
         min: 1,
@@ -91,12 +91,12 @@ class VideoGame
 
     public function getReleaseDate(): ?DateTime
     {
-        return $this->Release_date;
+        return $this->release_date;
     }
 
-    public function setReleaseDate(DateTime $Release_date): static
+    public function setReleaseDate(DateTime $release_date): static
     {
-        $this->Release_date = $Release_date;
+        $this->release_date = $release_date;
 
         return $this;
     }

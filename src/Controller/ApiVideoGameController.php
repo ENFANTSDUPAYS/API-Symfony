@@ -34,10 +34,12 @@ final class ApiVideoGameController extends AbstractController
     #[Route('/api/v1/add-game', name: 'app_api_add_game', methods: ['POST'])]
     public function apiV1AddGame(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse
     {
-        $videoGames = $serializer->deserialize($request->getContent(), VideoGame::class,'json', ['datetime_format' => 'Y-m-d']);
+//dd($request->getContent() ??'');
+
+        $videoGames = $serializer->deserialize($request->getContent(), VideoGame::class,'json', ['groups' => 'videoGame:write']);
+        
         $videoGames->setCreatedAt(new \DateTimeImmutable());
         $videoGames->setUpdatedAt(new \DateTimeImmutable());
-        
         $em->persist($videoGames);
         $em->flush();
 
