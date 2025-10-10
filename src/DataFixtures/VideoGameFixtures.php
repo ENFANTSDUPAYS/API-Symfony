@@ -101,6 +101,7 @@ class VideoGameFixtures extends Fixture implements DependentFixtureInterface
             //RÉFÉRENCE AVEC EDITOR
             $game->setEditorId($this->getReference($items["editor_ref"], Editor::class));
 
+            //REFERENCE A PLUSIEURS CATEGORIE
             foreach ($items["category_id"] as $categoryName) {
                 $game->addCategoryId($this->getReference($categoryName, Category::class));
             }

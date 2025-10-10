@@ -2,18 +2,57 @@
 
 namespace App\Controller;
 
+use App\Repository\VideoGameRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Flex\Response;
 
 final class ApiVideoGameController extends AbstractController
 {
-    #[Route('/api/v1/game', name: 'app_api_v1_game')]
-    public function index(): JsonResponse
+    #[IsGranted('PUBLIC_ACCESS')]
+    #[Route('/api/v1/game', name: 'app_api_v1_game', methods: ['GET'])]
+    public function index(VideoGameRepository $videoGameRepository): JsonResponse
     {
+        $videoGames = $videoGameRepository->findAll();
+
+        return $this->json(
+            $videoGames, 200, [], ['groups' => 'videoGame:read']
+        );
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/add-game', name: 'app_api_add_game', methods: ['POST'])]
+    public function apiV1AddGame(VideoGameRepository $videoGameRepository): JsonResponse
+    {
+        $videoGames = $videoGameRepository->findAll();
+
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ApiVideoGameController.php',
+            $videoGames, 200, [], ['groups' => 'video_game_read']
+        ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/edit-game/{id}', name: 'app_api_edit_game', methods: ['PUT'])]
+    public function apiV1EditGame(VideoGameRepository $videoGameRepository, int $id): JsonResponse
+    {
+        $videoGames = $videoGameRepository->findAll();
+
+        return $this->json([
+            $videoGames, 200, [], ['groups' => 'video_game_read']
+        ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/edit-game/{id}', name: 'app_api_edit_game', methods: ['DELETE'])]
+    public function apiV1DeleteGame(VideoGameRepository $videoGameRepository, int $id): JsonResponse
+    {
+        $videoGames = $videoGameRepository->findAll();
+
+        return $this->json([
+            $videoGames, 200, [], ['groups' => 'video_game_read']
         ]);
     }
 }

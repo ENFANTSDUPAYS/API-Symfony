@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: EditorRepository::class)]
 class Editor
@@ -18,21 +20,23 @@ class Editor
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["video_game_read"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     private ?string $country = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?DateTimeImmutable $created_at = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?DateTimeImmutable $updated_at = null;
 
     /**
      * @var Collection<int, VideoGame>
      */
     #[ORM\OneToMany(targetEntity: VideoGame::class, mappedBy: 'editor_id')]
+    #[MaxDepth(1)]
     private Collection $videoGames;
 
     public function __construct()

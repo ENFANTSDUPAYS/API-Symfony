@@ -3,39 +3,46 @@
 namespace App\Entity;
 
 use App\Repository\VideoGameRepository;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VideoGameRepository::class)]
+
 class VideoGame
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
     #[ORM\Column(length: 255)]
+    #[Groups(["videoGame:read"])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $Release_date = null;
+    #[Groups(["video_game_read"])]
+    private ?DateTime $Release_date = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(["video_game_read"])]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?DateTimeImmutable $created_at = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?DateTimeImmutable $updated_at = null;
 
     /**
      * @var Collection<int, Category>
      */
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'videoGames')]
+    #[Groups(["video_game_read"])]
     private Collection $category_id;
 
     #[ORM\ManyToOne(inversedBy: 'videoGames')]
@@ -63,12 +70,12 @@ class VideoGame
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTime
+    public function getReleaseDate(): ?DateTime
     {
         return $this->Release_date;
     }
 
-    public function setReleaseDate(\DateTime $Release_date): static
+    public function setReleaseDate(DateTime $Release_date): static
     {
         $this->Release_date = $Release_date;
 
