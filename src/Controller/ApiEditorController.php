@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ApiEditorController extends AbstractController
 {
@@ -28,9 +29,26 @@ final class ApiEditorController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/add-editor', name: 'app_api_add_editor', methods: ['POST'])]
-    public function apiV1AddEditor(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse
+    public function apiV1AddEditor(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
     {
-        $editor = $serializer->deserialize($request->getContent(), Editor::class,'json');
+        
+        json_decode($request->getContent());
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return $this->json(['message' => 'JSON invalide.'], Response::HTTP_BAD_REQUEST);
+        }
+        //DESERIALIZE LE JSON DANS L'OBJET EDITOR
+        $editor = $serializer->deserialize($request->getContent(), Editor::class, 'json');
+
+        //VALIDATION DE L'OBJET POUR VERIFIER LES CONTRAINTES
+        $errors = $validator->validate($editor);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
+        }
+
         $editor->setCreatedAt(new \DateTimeImmutable());
         $editor->setUpdatedAt(new \DateTimeImmutable());
 
@@ -38,7 +56,7 @@ final class ApiEditorController extends AbstractController
         $em->flush();
 
         return $this->json([
-            $editor, Response::HTTP_CREATED, [], ['groups' => 'category:write']
+            $editor, Response::HTTP_CREATED, [], ['groups' => 'category:read']
         ]);
     }
 }
