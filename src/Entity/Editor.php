@@ -123,7 +123,7 @@ class Editor
     {
         if (!$this->videoGames->contains($videoGame)) {
             $this->videoGames->add($videoGame);
-            $videoGame->setEditorId($this);
+            $videoGame->setEditor($this);
         }
 
         return $this;
@@ -133,8 +133,8 @@ class Editor
     {
         if ($this->videoGames->removeElement($videoGame)) {
             // set the owning side to null (unless already changed)
-            if ($videoGame->getEditorId() === $this) {
-                $videoGame->setEditorId(null);
+            if ($videoGame->getEditor() === $this) {
+                $videoGame->setEditor(null);
             }
         }
 

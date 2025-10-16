@@ -60,16 +60,16 @@ class VideoGame
         min: 1,
         minMessage: "Le jeu doit appartenir à au moins une catégorie."
     )]
-    private Collection $category_id;
+    private Collection $categories;
 
     #[ORM\ManyToOne(inversedBy: 'videoGames')]
     #[Assert\NotNull(message: "L'éditeur est obligatoire.")]
     #[Groups(["videogame:read", "videoGame:write"])]
-    private ?Editor $editor_id = null;
+    private ?Editor $editor = null;
 
     public function __construct()
     {
-        $this->category_id = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -138,35 +138,35 @@ class VideoGame
     /**
      * @return Collection<int, Category>
      */
-    public function getCategoryId(): Collection
+    public function getCategory(): Collection
     {
-        return $this->category_id;
+        return $this->categories;
     }
 
-    public function addCategoryId(Category $categoryId): static
+    public function addCategory(Category $category): static
     {
-        if (!$this->category_id->contains($categoryId)) {
-            $this->category_id->add($categoryId);
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
         }
 
         return $this;
     }
 
-    public function removeCategoryId(Category $categoryId): static
+    public function removeCategory(Category $category): static
     {
-        $this->category_id->removeElement($categoryId);
+        $this->categories->removeElement($category);
 
         return $this;
     }
 
-    public function getEditorId(): ?Editor
+    public function getEditor(): ?Editor
     {
-        return $this->editor_id;
+        return $this->editor;
     }
 
-    public function setEditorId(?Editor $editor_id): static
+    public function setEditor(?Editor $editor): static
     {
-        $this->editor_id = $editor_id;
+        $this->editor = $editor;
 
         return $this;
     }

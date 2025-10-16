@@ -101,7 +101,7 @@ class Category
     {
         if (!$this->videoGames->contains($videoGame)) {
             $this->videoGames->add($videoGame);
-            $videoGame->addCategoryId($this);
+            $videoGame->addCategory($this);
         }
 
         return $this;
@@ -110,7 +110,7 @@ class Category
     public function removeVideoGame(VideoGame $videoGame): static
     {
         if ($this->videoGames->removeElement($videoGame)) {
-            $videoGame->removeCategoryId($this);
+            $videoGame->removeCategory($this);
         }
 
         return $this;
