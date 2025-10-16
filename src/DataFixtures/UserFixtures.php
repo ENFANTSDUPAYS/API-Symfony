@@ -24,6 +24,7 @@ class UserFixtures extends Fixture
             ->setFirstName('Adrien')
             ->setLastName('Leclère')
             ->setRoles(['ROLE_ADMIN'])
+            ->setSubscriptionToNewsletter(true)
             ->setCreatedAt(new DateTimeImmutable())
             ->setUpdatedAt(new DateTimeImmutable());
 

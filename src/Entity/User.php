@@ -50,6 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $lastname = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private ?bool $subscription_to_newsletter = false;
+
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?DateTimeImmutable $createdAt = null;
 
@@ -165,6 +168,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function isSubscriptionToNewsletter(): ?bool
+    {
+        return $this->subscription_to_newsletter;
+    }
+
+    public function setSubscriptionToNewsletter(?bool $subscription_to_newsletter): self
+    {
+        $this->subscription_to_newsletter = $subscription_to_newsletter;
 
         return $this;
     }

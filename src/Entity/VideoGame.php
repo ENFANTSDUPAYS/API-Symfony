@@ -44,6 +44,10 @@ class VideoGame
     #[Groups(["videogame:read", "videoGame:write"])]
     #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
     private ?string $description = null;
+    
+    #[ORM\Column(type: 'string', length: 255, nullable: true, options: ['default' => null])]
+    #[Groups(["videogame:read", "videoGame:write"])]
+    private ?string $coverImage = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?DateTimeImmutable $created_at = null;
@@ -109,6 +113,18 @@ class VideoGame
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCoverImage(): ?string
+    {
+        return $this->coverImage;
+    }
+
+    public function setCoverImage(?string $coverImage): self
+    {
+        $this->coverImage = $coverImage;
 
         return $this;
     }
