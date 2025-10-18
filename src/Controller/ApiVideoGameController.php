@@ -154,13 +154,12 @@ final class ApiVideoGameController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/api/v1/delete-game/{id}', name: 'app_api_delete_game', methods: ['DELETE'])]
-    public function apiV1DeleteGame(VideoGameRepository $videoGameRepository, int $id): JsonResponse
+    #[Route('/api/v1/game-delete/{id}', name:'app_game_delete', methods: ['DELETE'])]
+    public function apiV1DeleteEditor(VideoGame $videoGame, EntityManagerInterface $em): JsonResponse 
     {
-        $videoGames = $videoGameRepository->findAll();
+        $em->remove($videoGame);
+        $em->flush();
 
-        return $this->json([
-            $videoGames, 200, [], ['groups' => 'video_game_read']
-        ]);
+        return new JsonResponse(null, 204);
     }
 }

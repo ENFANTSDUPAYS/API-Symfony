@@ -103,4 +103,14 @@ final class ApiUserController extends AbstractController
 
         return $this->json($user,200,[],['groups' => 'user:read']);
     }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/user-delete/{id}', name:'app_user_delete', methods: ['DELETE'])]
+    public function apiV1DeleteEditor(User $user, EntityManagerInterface $em): JsonResponse 
+    {   
+        $em->remove($user);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
+    }
 }

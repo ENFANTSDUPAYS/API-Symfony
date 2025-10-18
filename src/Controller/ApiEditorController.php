@@ -59,7 +59,7 @@ final class ApiEditorController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/api/v1/editor/{id}', name: 'app_api_edit_editor', methods: ['PUT'])]
+    #[Route('/api/v1/edit-editor/{id}', name: 'app_api_edit_editor', methods: ['PUT'])]
     public function apiV1EditEditor(Request $request, Editor $editor, EntityManagerInterface $em, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse {
         
         json_decode($request->getContent());
@@ -86,5 +86,19 @@ final class ApiEditorController extends AbstractController
         $em->flush();
 
         return $this->json($editor,200,[],['groups' => 'editor:read']);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/editor-delete/{id}', name:'app_editor_delete', methods: ['DELETE'])]
+    public function apiV1DeleteEditor(Editor $editor, EntityManagerInterface $em): JsonResponse 
+    {
+        if(!$editor->getVideoGames()->isEmpty()){
+            return $this->json(['message'=> 'Cet editeur ne peut pas être supprimer car il appartient à un video game'], 409);
+        }
+
+        $em->remove($editor);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
     }
 }

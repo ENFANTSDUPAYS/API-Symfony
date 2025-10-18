@@ -89,4 +89,18 @@ final class ApiCategoryController extends AbstractController
 
         return $this->json($category,200, [],['groups' => 'category:read']);
     }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/category-delete/{id}', name:'app_category_delete', methods: ['DELETE'])]
+    public function apiV1DeleteEditor(Category $category, EntityManagerInterface $em): JsonResponse 
+    {
+        if(!$category->getVideoGames()->isEmpty()){
+            return $this->json(['message'=> 'Cette categorie ne peut pas être supprimer car elle appartient à un video game'], 409);
+        }
+        
+        $em->remove($category);
+        $em->flush();
+
+        return new JsonResponse(null, 204);
+    }
 }
