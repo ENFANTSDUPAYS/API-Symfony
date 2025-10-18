@@ -34,7 +34,7 @@ final class ApiEditorController extends AbstractController
         
         json_decode($request->getContent());
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return $this->json(['message' => 'JSON invalide.'], Response::HTTP_BAD_REQUEST);
+            return $this->json(['message' => 'JSON invalide.'], 400);
         }
         //DESERIALIZE LE JSON DANS L'OBJET EDITOR
         $editor = $serializer->deserialize($request->getContent(), Editor::class, 'json');
@@ -46,7 +46,7 @@ final class ApiEditorController extends AbstractController
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
             }
-            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
+            return $this->json(['errors' => $errorMessages], 400);
         }
 
         $editor->setCreatedAt(new \DateTimeImmutable());
@@ -56,7 +56,37 @@ final class ApiEditorController extends AbstractController
         $em->flush();
 
         return $this->json([
-            $editor, Response::HTTP_CREATED, [], ['groups' => 'category:read']
+            $editor, 201, [], ['groups' => 'category:read']
         ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/editor/{id}', name: 'app_api_edit_editor', methods: ['PUT'])]
+    public function apiV1EditEditor(Request $request, Editor $editor, EntityManagerInterface $em, SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse {
+        
+        json_decode($request->getContent());
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return $this->json(['message' => 'JSON invalide.'], 400);
+        }
+
+        //ON SERIALIZE POUR METTRE A JOUR L'OBJET EXISTANT + OBJECT_TO_POPULATE pour ne pas en créer u n nouveau
+        $serializer->deserialize($request->getContent(),Editor::class,'json',['object_to_populate' => $editor]);
+
+        //LA VALIDATION
+        $errors = $validator->validate($editor);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], 400);
+        }
+
+        //MODIFICATION TOUJOURS DE UPDATED
+        $editor->setUpdatedAt(new \DateTimeImmutable());
+
+        $em->flush();
+
+        return $this->json($editor,200,[],['groups' => 'editor:read']);
     }
 }

@@ -33,9 +33,9 @@ final class ApiCategoryController extends AbstractController
     #[Route('/api/v1/add-category', name: 'app_api_add_category', methods: ['POST'])]
     public function apiV1AddCategory(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
     {
-         json_decode($request->getContent());
+        json_decode($request->getContent());
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return $this->json(['message' => 'JSON invalide.'], Response::HTTP_BAD_REQUEST);
+            return $this->json(['message' => 'JSON invalide.'], 400);
         }
         //DESERIALIZE LE JSON DANS L'OBJET EDITOR
         $category = $serializer->deserialize($request->getContent(), Category::class, 'json');
@@ -47,7 +47,7 @@ final class ApiCategoryController extends AbstractController
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
             }
-            return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
+            return $this->json(['errors' => $errorMessages], 400);
         }
 
         $category->setCreatedAt(new \DateTimeImmutable());
@@ -56,8 +56,37 @@ final class ApiCategoryController extends AbstractController
         $em->persist($category);
         $em->flush();
 
-        return $this->json([
-            $category, Response::HTTP_CREATED, [], ['groups' => 'category:read']
-        ]);
+        return $this->json([$category, 201, [], ['groups' => 'category:read']]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/category/{id}', name: 'app_api_edit_category', methods: ['PUT'])]
+    public function apiV1EditCategory(Request $request, Category $category, EntityManagerInterface $em,SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse {
+        
+        // VERIFICATION PREALABLE QUE LE JSON EST VALIDE
+        json_decode($request->getContent());
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return $this->json(['message' => 'JSON invalide.'], 400);
+        }
+
+        // ON UTILISE LE SERIALIZER POUR METTRE A JOUR L'OBJET EXISTANT
+        $serializer->deserialize($request->getContent(),Category::class,'json',['object_to_populate' => $category]);
+
+        //VALIDATION DES VALIDATORS
+        $errors = $validator->validate($category);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], 400);
+        }
+
+        //MISE A JOUR DE LA DATE DE MODIFICATION
+        $category->setUpdatedAt(new \DateTimeImmutable());
+
+        $em->flush();
+
+        return $this->json($category,200, [],['groups' => 'category:read']);
     }
 }
