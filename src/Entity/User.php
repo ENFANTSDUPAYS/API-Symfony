@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -22,6 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(["user:read", "user:write"])]
     #[Assert\NotBlank(message: "L'email ne peut pas être vide.")]
     #[Assert\Email(message: "L'email '{{ value }}' n'est pas valide.")]
     #[Assert\Length(
@@ -32,6 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.")]
+    #[Groups(["user:read", "user:write"])]
     #[Assert\Length(
         min: 2,
         max: 100,
@@ -41,6 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $firstname = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(["user:read", "user:write"])]
     #[Assert\NotBlank(message: "Le nom de famille ne peut pas être vide.")]
     #[Assert\Length(
         min: 2,
@@ -51,6 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    #[Groups(["user:read", "user:write"])]
     private ?bool $subscription_to_newsletter = false;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]

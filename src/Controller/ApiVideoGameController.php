@@ -33,7 +33,7 @@ final class ApiVideoGameController extends AbstractController
         );
     }
 
-    #[IsGranted('PUBLIC_ACCESS')]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/add-game', name: 'app_api_add_game', methods: ['POST'])]
     public function apiV1AddGame(Request $request, EntityManagerInterface $em, EditorRepository $editorRepository, SerializerInterface $serializer, CategoryRepository $categoryRepository, ValidatorInterface $validator): JsonResponse 
     {

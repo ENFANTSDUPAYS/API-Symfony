@@ -55,9 +55,7 @@ final class ApiEditorController extends AbstractController
         $em->persist($editor);
         $em->flush();
 
-        return $this->json([
-            $editor, 201, [], ['groups' => 'category:read']
-        ]);
+        return $this->json([$editor, 201, [], ['groups' => 'editor:read']]);
     }
 
     #[IsGranted('ROLE_ADMIN')]
