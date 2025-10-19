@@ -26,7 +26,7 @@ class VideoGameFixtures extends Fixture implements DependentFixtureInterface
             [
                 "title" => "Assassin’s Creed Odyssey",
                 "description" => "Un jeu d’action-aventure se déroulant dans la Grèce antique, où vous incarnez un mercenaire pendant la guerre du Péloponnèse.",
-                "release_date" => new DateTime("2018-10-05"),
+                "release_date" => new DateTime("2025-10-22"),
                 "editor_ref" => "Ubisoft",
                 "category_id" => ["Action-Aventure", "Monde ouvert", "RPG"],
             ],
@@ -52,9 +52,9 @@ class VideoGameFixtures extends Fixture implements DependentFixtureInterface
                 "category_id" => ["Action-Aventure", "Monde ouvert", "Exploration"],
             ],
             [
-                "title" => "Grand Theft Auto V",
+                "title" => "Grand Theft Auto VI",
                 "description" => "Un jeu d’action-aventure en monde ouvert se déroulant à Los Santos, mêlant crime, satire sociale et liberté totale.",
-                "release_date" => new DateTime("2013-09-17"),
+                "release_date" => new DateTime("2025-10-27"),
                 "editor_ref" => "Rockstar Games",
                 "category_id" => ["Action-Aventure", "Sandbox / Monde ouvert"],
             ],
