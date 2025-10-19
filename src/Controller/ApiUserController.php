@@ -26,9 +26,14 @@ final class ApiUserController extends AbstractController
     {
         $page = $request->get('page',1);
         $limit = $request->get('limit',10);
-        $editors = $userRepository->findAllWithPagination($page, $limit);
 
-        return $this->json($editors,200, [], ['groups'=> 'user:read']);
+        $users = $userRepository->findAllWithPagination($page, $limit);
+
+        if(!$users){
+            return $this->json(["Aucun utilisateur n'a été trouver."], 404);
+        }
+
+        return $this->json($users,200, [], ['groups'=> 'user:read']);
     }
 
     #[IsGranted('ROLE_ADMIN')]
@@ -107,7 +112,13 @@ final class ApiUserController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/user-delete/{id}', name:'app_user_delete', methods: ['DELETE'])]
     public function apiV1DeleteEditor(User $user, EntityManagerInterface $em): JsonResponse 
-    {   
+    {
+        $user = $em->getRepository(User::class)->find($user->getId());
+        
+        if(!$user){
+            return $this->json(['message'=> 'Aucun utilisateur trouvé'],404);
+        }
+
         $em->remove($user);
         $em->flush();
 

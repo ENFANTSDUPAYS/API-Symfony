@@ -24,7 +24,12 @@ final class ApiCategoryController extends AbstractController
     {
         $page = $request->get('page',1);
         $limit = $request->get('limit',10);
+
         $categories = $categoryRepository->findAllWithPagination($page, $limit);
+
+        if(!$categories) {
+            return $this->json(["Aucune catégorie n'a été trouver."], 404);
+        }
 
         return $this->json($categories,200, [], ['groups'=> 'category:read']);
     }
@@ -94,6 +99,12 @@ final class ApiCategoryController extends AbstractController
     #[Route('/api/v1/category-delete/{id}', name:'app_category_delete', methods: ['DELETE'])]
     public function apiV1DeleteEditor(Category $category, EntityManagerInterface $em): JsonResponse 
     {
+        $category = $em->getRepository(Category::class)->find($category->getId());
+
+        if (!$category) {
+            return $this->json(['message'=> 'Aucune catégorie trouvée.'],404);
+        }
+
         if(!$category->getVideoGames()->isEmpty()){
             return $this->json(['message'=> 'Cette categorie ne peut pas être supprimer car elle appartient à un video game'], 409);
         }

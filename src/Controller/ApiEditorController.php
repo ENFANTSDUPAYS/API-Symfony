@@ -22,7 +22,12 @@ final class ApiEditorController extends AbstractController
     {
         $page = $request->get('page',1);
         $limit = $request->get('limit',10);
+        
         $editors = $editorRepository->findAllWithPagination($page, $limit);
+
+        if(!$editors){
+            return $this->json(["Aucun éditeur n'a été trouver."], 404);
+        }
 
         return $this->json($editors,200, [], ['groups'=> 'editor:read']);
     }
@@ -92,6 +97,12 @@ final class ApiEditorController extends AbstractController
     #[Route('/api/v1/editor-delete/{id}', name:'app_editor_delete', methods: ['DELETE'])]
     public function apiV1DeleteEditor(Editor $editor, EntityManagerInterface $em): JsonResponse 
     {
+        $editor = $em->getRepository(Editor::class)->find($editor->getId());
+
+        if (!$editor) {
+            return $this->json(['message' => 'Aucun éditeur trouvé.'], 404);
+        }
+
         if(!$editor->getVideoGames()->isEmpty()){
             return $this->json(['message'=> 'Cet editeur ne peut pas être supprimer car il appartient à un video game'], 409);
         }

@@ -28,6 +28,10 @@ final class ApiVideoGameController extends AbstractController
         
         $videoGames = $videoGameRepository->findAllWithPagination($page, $limit);
 
+        if (!$videoGames) {
+            return $this->json(["Aucun jeu vidéo n'a été trouver."], 404);
+        }
+
         return $this->json(
             $videoGames, 200, [], ['groups' => 'videogame:read']
         );
@@ -157,6 +161,12 @@ final class ApiVideoGameController extends AbstractController
     #[Route('/api/v1/game-delete/{id}', name:'app_game_delete', methods: ['DELETE'])]
     public function apiV1DeleteEditor(VideoGame $videoGame, EntityManagerInterface $em): JsonResponse 
     {
+        $videoGame = $em->getRepository(VideoGame::class)->find($videoGame->getId());
+
+        if (!$videoGame) {
+            return $this->json(['message'=> 'Aucun jeu vidéo trouvé.'],404);
+        }
+
         $em->remove($videoGame);
         $em->flush();
 
