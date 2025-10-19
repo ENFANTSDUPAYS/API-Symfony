@@ -74,7 +74,7 @@ final class ApiUserController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/api/v1/user/{id}', name: 'app_api_edit_user', methods: ['PUT'])]
+    #[Route('/api/v1/edit-user/{id}', name: 'app_api_edit_user', methods: ['PUT'])]
     public function apiV1EditUser(Request $request, User $user, EntityManagerInterface $em, SerializerInterface $serializer, ValidatorInterface $validator, UserPasswordHasherInterface $passwordHasher): JsonResponse {
         
         $data = json_decode($request->getContent(), true);

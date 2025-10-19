@@ -65,7 +65,7 @@ final class ApiCategoryController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/api/v1/category/{id}', name: 'app_api_edit_category', methods: ['PUT'])]
+    #[Route('/api/v1/edit-category/{id}', name: 'app_api_edit_category', methods: ['PUT'])]
     public function apiV1EditCategory(Request $request, Category $category, EntityManagerInterface $em,SerializerInterface $serializer, ValidatorInterface $validator): JsonResponse {
         
         // VERIFICATION PREALABLE QUE LE JSON EST VALIDE
