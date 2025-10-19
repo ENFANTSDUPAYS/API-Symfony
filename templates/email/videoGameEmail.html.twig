@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Les sorties de la semaine</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px; color: #333;">
+    <h1 style="color: #4A90E2;">Les sorties jeux vidéo de la semaine !</h1>
+    
+    <p>Bonjour,</p>
+    <p>Voici la liste des jeux qui sortent dans les 7 prochains jours :</p>
+
+    {% if games is not empty %}
+        <ul style="list-style-type: none; padding: 0;">
+            {% for game in games %}
+                <li style="margin-bottom: 15px; padding: 10px; border-left: 3px solid #4A90E2; background-color: #f4f4f4;">
+                    <strong>{{ game.title }}</strong><br>
+                    Date de sortie : {{ game.releaseDate|date('d/m/Y') }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Il n'y a pas de nouveaux jeux prévus pour cette semaine. Revenez la semaine prochaine !</p>
+    {% endif %}
+
+    <p style="margin-top: 30px; font-size: 12px; color: #888;">
+        Vous recevez cet email car vous êtes abonné à notre newsletter.
+    </p>
+</body>
+</html>
