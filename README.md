@@ -28,11 +28,13 @@ https://github.com/ENFANTSDUPAYS/API-Symfony.git
 ```
 ### Installation package
 ```
+Soyer sur la branche master et faite :
 - Composer install
 ```
-### Configurer DATABASE_URL
+### Configurer le .env
 ```
 DATABASE_URL="mysql://utilisateur:motdepasse@127.0.0.1:3306/nom_base_données?serverVersion=8.0.32&charset=utf8mb4"
+MAILER_DSN="smtp://USERNAME:PASSWORD@sandbox.smtp.mailtrap.io:2525"
 ```
 ### Initialisation de la base de donnée
 ```
@@ -43,6 +45,11 @@ symfony console doctrine:fixtures:load
 ### Démarrage du serveur
 ```
 symfony serve
+```
+
+### Commande pour envoyer le mail
+```
+php bin/console SendNewsletterCommand
 ```
 
 # Problème
